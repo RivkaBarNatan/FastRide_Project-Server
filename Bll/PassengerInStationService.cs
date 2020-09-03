@@ -81,5 +81,12 @@ namespace BL
             }
             return cList;
         }
+        public List<string> GetAllStationAtHour(TimeSpan hour)
+        {
+            var x = from s in passengerInStation.Find(p => p.Hour == hour).ToList()
+                    select stationSer.GetStationsById(s.StationId).Address;
+            return x.ToList();
+        }
+
     }
 }

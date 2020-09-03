@@ -13,11 +13,12 @@ namespace BL.OrTools
 {
     public class VrpCapacity
     {
+        private readonly PassengerInStationService passInStatSer;
         public void a()
         {
 
             var x = new DistanceMatrixRequest();
-            Location location = new Location() { }
+            Location location = new Location() {};
             x.Origins = new 
           var origin1 = new google.maps.LatLng(55.930385, -3.118425);
           var origin2 = "Greenwich, England";
