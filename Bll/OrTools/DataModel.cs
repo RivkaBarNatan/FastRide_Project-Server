@@ -6,6 +6,8 @@ namespace BL.OrTools
 {
     public class DataModel
     {
+        private readonly PassengerInStationService passInStat;
+        private readonly VehiclesService vehiclesSer;
         public DataModel()
         {
 
@@ -29,7 +31,7 @@ namespace BL.OrTools
       { 662, 1210, 754, 1358, 1244, 708, 480, 856, 514, 468, 354, 844, 730, 536, 194, 798, 0}
             };
             Demands = new long[]{ 0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8 };
-            //VehicleCapacities = VehiclesService.GetAllVehiclesList().Count;
+            VehicleCapacities = vehiclesSer.GetAllVehiclesCapacity();
             Depot = 0;
         }
         public long[,] DistanceMatrix { get; set; }

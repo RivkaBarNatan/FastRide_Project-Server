@@ -47,9 +47,10 @@ namespace BL
             //TODO TE.SaveChanges();
         }
 
-        public  long[] GetAllVehiclesCapacity(List<VehiclesDTO> vl)
+        public long[] GetAllVehiclesCapacity()
         {
-            var CapacityList = from v in vl
+            var vehiclelist = GetAllVehiclesList();
+            var CapacityList = from v in vehiclelist
                                select Convert.ToInt64 (v.AmountPlaces);
 
             return CapacityList.ToArray();

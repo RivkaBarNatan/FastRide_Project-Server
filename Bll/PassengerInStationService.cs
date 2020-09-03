@@ -12,6 +12,8 @@ namespace BL
     public class PassengerInStationService
     {
         private readonly IMongoCollection<PassengerInStation> passengerInStation;
+        private readonly StationService stationSer;
+
         public PassengerInStationService(IDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
@@ -45,7 +47,39 @@ namespace BL
             passengerInStation.DeleteOne(p => p.PassengerInStationId == id);
             //TODO TE.SaveChanges();
         }
+        public List<int> GetCountPassengerInStationAtHour(TimeSpan hour)
+        {
+            //var passengerInStationList = GetAllPassengerInStationList();
+            //var StationList = stationSer.GetAllStationsList();
+            //int[] countArray;
+            //int num = 0;
+            //for (int i = 0; i < StationList.Count; i++)
+            //{
+            //    for (int j = 0; j < passengerInStationList.Count; j++)
+            //    {
+            //        if (passengerInStationList[j].StationId == StationList[i].StationId && passengerInStationList[j].Hour == hour)
+            //            num += 1;
+            //    }
+            //    countArray = num;
+            //    num = 0;
+            //}
+            List<int> cList= new List<int>();
+            for (int i = 0; i < stationSer.GetAllStationsList().Count; i++)
+            {
+                int num = 0;
+                //var a = from y in passInStatSer.GetAllPassengerInStationList()
+                //        where y.StationId == stationSer.GetAllStationsList()[i].StationId && hour == y.Hour
+                //        select num += 1;
+
+                for (int j = 0; j < GetAllPassengerInStationList().Count; j++)
+                {
+                    if (GetAllPassengerInStationList()[j].StationId == stationSer.GetAllStationsList()[i].StationId
+                        && hour == GetAllPassengerInStationList()[j].Hour)
+                        num++;
+                }
+                cList.Add(num);
+            }
+            return cList;
+        }
     }
 }
-
-
