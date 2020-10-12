@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dal
+namespace DAL
 {
     public interface IDatabaseSettings
     {

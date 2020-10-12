@@ -4,41 +4,44 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViewModel;
-using Dal;
+using DAL;
 using MongoDB.Driver;
+using AutoMapper;
 
 namespace BL
 {
     public class TransportationService
     {
         private readonly IMongoCollection<Transportation> transportations;
+        private readonly IMapper mapper;
 
-        public TransportationService(IDatabaseSettings settings)
+        public TransportationService(IDatabaseSettings settings, IMapper map)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             transportations = database.GetCollection<Transportation>(this.GetType().Name+"s");
+
+            mapper = map;
         }
 
         public List<TransportationDTO> GetAllTransportationsList()
         {
-            return TransportationDTO.ConvertToTransportationDTOList(transportations.Find(_ => true).ToList());
+            return mapper.Map<List<TransportationDTO>>(transportations.Find(_ => true).ToList());
         }
 
         public  TransportationDTO GetTransportationsById(string id)
         {
-            return TransportationDTO.ConvertToTransportationDTOList(transportations.Find(t=> t.TransportationId == id).ToList()).FirstOrDefault(); 
+            return mapper.Map<TransportationDTO>(transportations.Find(t=> t.TransportationId == id).ToList().FirstOrDefault()); 
         }
 
         public  void AddTransportationsToList(TransportationDTO transportation)
         {
-            transportations.InsertOne(TransportationDTO.ConvertToTransportation(transportation));
+            transportations.InsertOne(mapper.Map<Transportation>(transportation));
         }
 
         public  void PutTransportations(TransportationDTO transportation)
         {
-            transportations.ReplaceOne(t => t.TransportationId == transportation.TransportationId, TransportationDTO.ConvertToTransportation(transportation));
-            //TODO TE.SaveChanges();
+            transportations.ReplaceOne(t => t.TransportationId == transportation.TransportationId, mapper.Map<Transportation>(transportation));
         }
 
         public  void DeleteTransportations(string id)
@@ -46,7 +49,14 @@ namespace BL
             //Transportation transportations = TE.Transportation.Where(t => t.TransportationId.Equals(id)).FirstOrDefault();
             //TE.Transportation.Remove(transportations);
             transportations.DeleteOne(t => t.TransportationId == id);
-            //TODO TE.SaveChanges();
+        }
+
+        public List<string> GetAddressList(string transportationId)
+        {
+            var address = transportations.AsQueryable()
+                .Where(t => t.TransportationId == transportationId)
+                .Select(t=> t.Address);
+            return address.ToList();
         }
     }
 }

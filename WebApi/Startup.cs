@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BL;
 using BL.OrTools;
-using Dal;
+using DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using static WebApi.AutoMapperConfiguration.Mapping;
 
 namespace WebApi
 {
@@ -35,21 +37,23 @@ namespace WebApi
             services.AddSingleton<IDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<VrpCapacity>();
-            services.AddSingleton<ActualTransportationService>();
             services.AddSingleton<VehiclesService>();
             services.AddSingleton<TransportationService>();
             services.AddSingleton<TrackService>();
             services.AddSingleton<StationService>();
             services.AddSingleton<ChildInFamilyService>();
-            services.AddSingleton<EstablishmentService>();
-            services.AddSingleton<FamilyService>();
+            services.AddSingleton<OrganizationService>();
+            services.AddSingleton<UserService>();
             services.AddSingleton<FrequencyService>();
-            services.AddSingleton<PassengerInStationService>();
-            services.AddSingleton<PassengerInTrasportationService>();
             services.AddSingleton<StationInTrackService>();
             services.AddSingleton<StationService>();
 
+         
+                var config = AutoMapperConfiguration.RegisterMappings();
+                var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddCors(options =>
             {

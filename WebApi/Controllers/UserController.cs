@@ -9,10 +9,10 @@ using ViewModel;
 
 namespace WebApi.Controllers
 {
-    public class FamilyController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly FamilyService familyService;
-        public FamilyController(FamilyService familyService)
+        private readonly UserService familyService;
+        public UserController(UserService familyService)
         {
             this.familyService = familyService;
         }
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
 
         [HttpPost("[action]")] 
         // POST: api/Family
-        public IActionResult AddFamily([FromBody]FamilyDTO family)
+        public IActionResult AddFamily([FromBody]UserDTO family)
         {
             familyService.AddFamilyToList(family);
             return Ok(familyService.GetAllFamilyList());
@@ -49,7 +49,7 @@ namespace WebApi.Controllers
 
         [HttpPut("[action]")] 
         // PUT: api/Family/5
-        public IActionResult PutFamily([FromBody]FamilyDTO family)
+        public IActionResult PutFamily([FromBody]UserDTO family)
         {
             familyService.PutFamily(family);
             return Ok(familyService.GetAllFamilyList());

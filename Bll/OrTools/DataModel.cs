@@ -8,7 +8,7 @@ namespace BL.OrTools
     {
         private readonly PassengerInStationService passInStat;
         private readonly VehiclesService vehiclesSer;
-        public DataModel()
+        public DataModel(TimeSpan hour)
         {
 
             DistanceMatrix = new long[,]{
@@ -30,7 +30,7 @@ namespace BL.OrTools
       { 776, 868, 1552, 560, 674, 1050, 1278, 742, 1084, 810, 1152, 274, 388, 422, 764, 0, 798},
       { 662, 1210, 754, 1358, 1244, 708, 480, 856, 514, 468, 354, 844, 730, 536, 194, 798, 0}
             };
-            Demands = new long[]{ 0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8 };
+            Demands = passInStat.GetCountPassengerInStationAtHour(hour);
             VehicleCapacities = vehiclesSer.GetAllVehiclesCapacity();
             Depot = 0;
         }

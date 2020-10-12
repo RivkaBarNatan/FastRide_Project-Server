@@ -10,10 +10,10 @@ using ViewModel;
 
 namespace WebApi.Controllers
 {
-    public class EstablishmentController : ControllerBase
+    public class OrganizationController : ControllerBase
     {
-        private readonly EstablishmentService establishmentService;
-        public EstablishmentController(EstablishmentService establishmentService)
+        private readonly OrganizationService establishmentService;
+        public OrganizationController(OrganizationService establishmentService)
         {
             this.establishmentService = establishmentService;
         }
@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         // GET: api/Establishment
         public IActionResult GetAllEstablishmentList()
         {
-            return Ok(establishmentService.GetAllEstablishmentList());
+            return Ok(establishmentService.GetAllOrganizationsList());
         }
 
         [HttpGet("[action]")]
@@ -33,18 +33,18 @@ namespace WebApi.Controllers
 
         [HttpPost("[action]")]
         // POST: api/Establishment
-        public IActionResult AddEstablishment([FromBody]EstablishmentDTO establishment)
+        public IActionResult AddEstablishment([FromBody]OrganizationDTO establishment)
         {
             establishmentService.AddEstablishmentToList(establishment);
-            return Ok(establishmentService.GetAllEstablishmentList());
+            return Ok(establishmentService.GetAllOrganizationsList());
         }
 
         [HttpPut("[action]")]
         // PUT: api/Establishment/5
-        public IActionResult PutEstablishment([FromBody]EstablishmentDTO establishment)
+        public IActionResult PutEstablishment([FromBody]OrganizationDTO establishment)
         {
             establishmentService.PutEstablishment(establishment);
-            return Ok(establishmentService.GetAllEstablishmentList());
+            return Ok(establishmentService.GetAllOrganizationsList());
 
         }
 
@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         public IActionResult DeleteEstablishment(string id)
         {
             establishmentService.DeleteEstablishment(id);
-            return Ok(establishmentService.GetAllEstablishmentList());
+            return Ok(establishmentService.GetAllOrganizationsList());
         }
 
     }

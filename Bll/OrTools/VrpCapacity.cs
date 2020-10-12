@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Google.OrTools.ConstraintSolver;
-using Dal;
+using DAL;
 using BL;
 using ViewModel;
 using GoogleApi;
 using Google;
 using GoogleApi.Entities.Maps.DistanceMatrix.Request;
 using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
+using GoogleApi.Entities.Maps.DistanceMatrix.Response;
+using System.Linq;
 //using GoogleApi.Entities.Maps.DistanceMatrix;
 namespace BL.OrTools
 {
+    
     public class VrpCapacity
     {
+        /*
         private readonly PassengerInStationService passInStatSer;
         public void a()
         {
@@ -40,21 +44,21 @@ namespace BL.OrTools
 
 
         }
-        void callback(response, status)
+        void callback(DistanceMatrixResponse response, string status)
         {
-            if (status == 'OK')
+            if (response.Status == GoogleApi.Entities.Common.Enums.Status.Ok)
             {
-                var origins = response.originAddresses;
-                var destinations = response.destinationAddresses;
-
-                for (var i = 0; i < origins.length; i++)
+                 var origins = response.OriginAddresses.ToList();
+                var destinations = response.DestinationAddresses.ToList();
+                var rows = response.Rows.ToList();
+                for (var i = 0; i < origins.Count(); i++)
                 {
-                    var results = response.rows[i].elements;
-                    for (var j = 0; j < results.length; j++)
+                    var results = rows[i].Elements.ToList();
+                    for (var j = 0; j < results.Count(); j++)
                     {
                         var element = results[j];
-                        var distance = element.distance.text;
-                        var duration = element.duration.text;
+                        var distance = element.Distance.Text;
+                        var duration = element.Duration.Text;
                         var from = origins[i];
                         var to = destinations[j];
                     }
@@ -103,8 +107,8 @@ namespace BL.OrTools
             Console.WriteLine("Total load of all routes: {0}m", totalLoad);
         }
 
-        public void CalcRoute()
-        {
+        */public void CalcRoute()
+        {/*
             // Instantiate the data problem.
             DataModel data = new DataModel();
             // Create Routing Index Manager
@@ -156,6 +160,6 @@ namespace BL.OrTools
 
             // Print solution on console.
             PrintSolution(data, routing, manager, solution);
-        }
+       */ }
     }
 }

@@ -8,14 +8,14 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ViewModel
 {
-    public class TrackDTO
+    public class OrganizationDTO
     {
         [BsonId]
-        public string TrackId { get; set; }
         public string EstablishmentId { get; set; }
-        public string Destination_Source { get; set; }
-        public string Ingathering_Interspersion { get; set; }
-        public string FrequencyId { get; set; }
-        public int TrackPrice { get; set; }
+        public string Address { get; set; }
+        public string EstablishmentName { get; set; }
+        public string CelContactMan { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

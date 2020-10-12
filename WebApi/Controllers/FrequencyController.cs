@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-
+using AutoMapper;
 using BL;
 using ViewModel;
 
@@ -12,11 +12,14 @@ namespace WebApi.Controllers
 {
     public class FrequencyController : ControllerBase
     {
+        private readonly IMapper mapper;
         private readonly FrequencyService frequencyService;
-        public FrequencyController(FrequencyService frequencyService)
+        public FrequencyController(FrequencyService frequencyService, IMapper mapper)
         {
             this.frequencyService = frequencyService;
+            this.mapper = mapper;
         }
+
         [HttpGet("[action]")]        // GET: api/Frequency
         public IActionResult GetAllFrequencyList()
         {
