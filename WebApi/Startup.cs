@@ -14,7 +14,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
-using static WebApi.AutoMapperConfiguration.Mapping;
 
 namespace WebApi
 {
@@ -43,16 +42,12 @@ namespace WebApi
             services.AddSingleton<TransportationService>();
             services.AddSingleton<TrackService>();
             services.AddSingleton<StationService>();
-            services.AddSingleton<ChildInFamilyService>();
             services.AddSingleton<OrganizationService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<FrequencyService>();
-            services.AddSingleton<StationInTrackService>();
             services.AddSingleton<StationService>();
 
-         
-                var config = AutoMapperConfiguration.RegisterMappings();
-                var mapper = config.CreateMapper();
+            var mapper = AutoMapperConfiguration.AutoMapperConfiguration.RegisterMappings();
             services.AddSingleton(mapper);
 
             services.AddCors(options =>

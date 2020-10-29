@@ -18,8 +18,6 @@ namespace WebApi.AutoMapperConfiguration
             });
         }
     }
-    ‏
-
     public class AutoMapping : Profile
     {
         public AutoMapping()
@@ -37,12 +35,11 @@ namespace WebApi.AutoMapperConfiguration
             CreateMap<Schedules, SchedulesDTO>();
             CreateMap<SchedulesDTO, Schedules>();
             CreateMap<Station, StationDTO>();
-            CreateMap<StationDTO, Station >();
+            CreateMap<StationDTO, Station>();
             CreateMap<Track, TrackDTO>();
             CreateMap<TrackDTO, Track>();
             CreateMap<Vehicles, VehiclesDTO>();
             CreateMap<VehiclesDTO, VehiclesDTO>();
         }
-    }‏
-  
+    }
 }
