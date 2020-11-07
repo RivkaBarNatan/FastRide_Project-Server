@@ -22,17 +22,17 @@ namespace BL
 
             mapper = map;
         }
-        public List<UserDTO> GetAllFamilyList()
+        public List<UserDTO> GetAllUsersList()
         {
             return mapper.Map<List<UserDTO>>(family.Find(_ => true).ToList());
         }
 
-        public UserDTO GetFamilyByUserName(string name)
+        public UserDTO GetUserByUserName(string name)
         {
             return mapper.Map<UserDTO>(family.Find(f => f.UserName == name).ToList().FirstOrDefault()); ;
         }
 
-        public  void AddFamilyToList(UserDTO family)
+        public  void AddUserToList(UserDTO family)
         {
             this.family.InsertOne(mapper.Map<User>(family));
             //TODO TE.SaveChanges();
@@ -49,12 +49,12 @@ namespace BL
             }
             return !isExist;
         }
-        public  void PutFamily(UserDTO fam)
+        public  void PutUser(UserDTO fam)
         {
             family.ReplaceOne(f => f.UserId == fam.UserId, mapper.Map<User>(fam));
         }
 
-        public  void DeleteFamily(string id)
+        public  void DeleteUser(string id)
         {
             family.DeleteOne(f => f.UserId == id);
         }

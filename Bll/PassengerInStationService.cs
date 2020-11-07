@@ -47,19 +47,19 @@ namespace BL
         //            passengerInStation.DeleteOne(p => p.PassengerInStationId == id);
         //            //TODO TE.SaveChanges();
         //        }
-        //        public long[] GetCountPassengerInStationAtHour(TimeSpan hour)
-        //        {
-        //            long[] cList;
-        //            for (int i = 0; i < stationSer.GetAllStationsList().Count; i++)
-        //            {
-        //                var ddd=from x in stationSer.GetAllStationsList()
-        //                        select from j in GetAllPassengerInStationList()
-        //                               where j.StationId == stationSer.GetAllStationsList()[i].StationId && hour == j.Hour
-        //                               select j;
-        //                cList[i]=c.Count();
-        //            }
-        //            return cList;
-        //        }
+        //public long[] GetCountPassengerInStationAtHour(TimeSpan hour)
+        //{
+        //    long[] cList;
+        //    for (int i = 0; i < stationSer.GetAllStationsList().Count; i++)
+        //    {
+        //        var ddd=from x in stationSer.GetAllStationsList()
+        //                select from j in GetAllPassengerInStationList()
+        //                       where j.StationId == stationSer.GetAllStationsList()[i].StationId && hour == j.Hour
+        //                       select j;
+        //        cList[i]=c.Count();
+        //    }
+        //    return cList;
+        //}
         //        public List<string> GetAllStationAtHour(TimeSpan hour)
         //        {
         //            var x = from s in passengerInStation.Find(p => p.Hour == hour).ToList()

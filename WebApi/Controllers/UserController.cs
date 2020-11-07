@@ -11,55 +11,55 @@ namespace WebApi.Controllers
 {
     public class UserController : ControllerBase
     {
-        private readonly UserService familyService;
-        public UserController(UserService familyService)
+        private readonly UserService UserService;
+        public UserController(UserService UserService)
         {
-            this.familyService = familyService;
+            this.UserService = UserService;
         }
         [HttpGet("[action]")]   
-        // GET: api/Family
-        public IActionResult GetAllFamilyList()
+        // GET: api/User
+        public IActionResult GetAllUserList()
         {
-            return Ok(familyService.GetAllFamilyList());
+            return Ok(UserService.GetAllUsersList());
         }
 
         [HttpGet("[action]")]
-        // GET: api/Family/5
-        public IActionResult GetFamilyByUserName(string userName)
+        // GET: api/User/5
+        public IActionResult GetUserByUserName(string userName)
         {
-            return Ok(familyService.GetFamilyByUserName(userName));
+            return Ok(UserService.GetUserByUserName(userName));
         }
 
         [HttpGet]
         //[Route("ChekIfPasswordIsExist/{userName}/{password}")]
         [Route("ChekIfPasswordIsExist")]
-        // GET: api/Family/5
+        // GET: api/User/5
         public IActionResult ChekIfPasswordIsExist(string userName, string password)
         {
-            return Ok(familyService.ChekIfPasswordIsExist(userName, password));
+            return Ok(UserService.ChekIfPasswordIsExist(userName, password));
         }
 
         [HttpPost("[action]")] 
-        // POST: api/Family
-        public IActionResult AddFamily([FromBody]UserDTO family)
+        // POST: api/User
+        public IActionResult AddUser([FromBody]UserDTO User)
         {
-            familyService.AddFamilyToList(family);
-            return Ok(familyService.GetAllFamilyList());
+            UserService.AddUserToList(User);
+            return Ok(UserService.GetAllUsersList());
         }
 
         [HttpPut("[action]")] 
-        // PUT: api/Family/5
-        public IActionResult PutFamily([FromBody]UserDTO family)
+        // PUT: api/User/5
+        public IActionResult PutUser([FromBody]UserDTO User)
         {
-            familyService.PutFamily(family);
-            return Ok(familyService.GetAllFamilyList());
+            UserService.PutUser(User);
+            return Ok(UserService.GetAllUsersList());
         }
 
-        [HttpDelete("[action]")]        // DELETE: api/Family/5
-        public IActionResult DeleteFamily(string id)
+        [HttpDelete("[action]")]        // DELETE: api/User/5
+        public IActionResult DeleteUser(string id)
         {
-            familyService.DeleteFamily(id);
-            return Ok(familyService.GetAllFamilyList());
+            UserService.DeleteUser(id);
+            return Ok(UserService.GetAllUsersList());
         }
     }
 }

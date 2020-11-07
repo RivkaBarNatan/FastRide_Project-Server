@@ -5,50 +5,59 @@ using DAL;
 using BL;
 using ViewModel;
 using GoogleApi;
-using Google;
 using GoogleApi.Entities.Maps.DistanceMatrix.Request;
-using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 using GoogleApi.Entities.Maps.DistanceMatrix.Response;
 using System.Linq;
-//using GoogleApi.Entities.Maps.DistanceMatrix;
+using GoogleApi.Entities.Common;
+using GoogleApi.Entities.Common.Enums;
+using GoogleApi.Entities.Maps.Common.Enums;
+
 namespace BL.OrTools
 {
     
     public class VrpCapacity
     {
-        /*
-        private readonly PassengerInStationService passInStatSer;
-        public void a()
+
+       
+        //private readonly PassengerInStationService passInStatSer;
+        public DistanceMatrixResponse distanceMatrix(List<string> destinations, string origin)
         {
+            DistanceMatrixRequest request = new DistanceMatrixRequest();
+            var address = new List<Location>() { new Location(origin) };
 
-            var x = new DistanceMatrixRequest();
-            Location location = new Location() {};
-            x.Origins = new 
-          var origin1 = new google.maps.LatLng(55.930385, -3.118425);
-          var origin2 = "Greenwich, England";
-          var destinationA = "Stockholm, Sweden";
-          var destinationB = new google.maps.LatLng(50.087692, 14.421150);
+            address.AddRange(destinations.Select(t => new Location(t)));
+            request.Destinations = address;
+            request.Origins = address;
 
-          var service = new google.maps.DistanceMatrixService();
-          service.getDistanceMatrix(
-          {
-            origins: [origin1, origin2],
-            destinations: [destinationA, destinationB],
-            travelMode: "DRIVING",
-            transitOptions: TransitOptions,
-            drivingOptions: DrivingOptions,
-            unitSystem: UnitSystem,
-            avoidHighways: Boolean,
-            avoidTolls: Boolean,
-          }, callback);
+            request.TravelMode = TravelMode.Driving;
+            request.Key = "AIzaSyAXS8o9R2xBXjDX";
+            var res = GoogleMaps.DistanceMatrix.Query(request);
 
+            if (res.Status == Status.Ok)
+            {
+                res.
+                //long[,] mat = new long[destinations.Count(), destinations.Count()];
+                //mat
+                long[,] matrix = new long[destinations.Count(), destinations.Count()];
+                for (int i = 0; i < res.Rows.ToArray().Length; i++)
+                {
+                   DistanceMatrixE lements.[] elements = res.Rows.ToArray()[i].Elements;
+                    for (int j = 0; j < elements.Length; j++)
+                    {
+                        matrix[i][j] = elements[j].distance.inMeters;
+                    }
+                }
+                return matrix;
+            }
+            //throw Exception
+            return res;
 
         }
         void callback(DistanceMatrixResponse response, string status)
         {
             if (response.Status == GoogleApi.Entities.Common.Enums.Status.Ok)
             {
-                 var origins = response.OriginAddresses.ToList();
+                var origins = response.OriginAddresses.ToList();
                 var destinations = response.DestinationAddresses.ToList();
                 var rows = response.Rows.ToList();
                 for (var i = 0; i < origins.Count(); i++)
@@ -107,14 +116,14 @@ namespace BL.OrTools
             Console.WriteLine("Total load of all routes: {0}m", totalLoad);
         }
 
-        */public void CalcRoute()
-        {/*
+        public void CalcRoute()
+        {
             // Instantiate the data problem.
             DataModel data = new DataModel();
             // Create Routing Index Manager
             RoutingIndexManager manager = new RoutingIndexManager(
                 data.DistanceMatrix.GetLength(0),
-               50,// vehiclesService.GetAllVehiclesList().Count,
+               data.VehicleNumber,//50,// vehiclesService.GetAllVehiclesList().Count,
                 data.Depot);
 
             // Create Routing Model.
@@ -160,6 +169,6 @@ namespace BL.OrTools
 
             // Print solution on console.
             PrintSolution(data, routing, manager, solution);
-       */ }
+        }
     }
 }
