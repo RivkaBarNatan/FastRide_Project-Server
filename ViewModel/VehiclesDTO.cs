@@ -15,6 +15,7 @@ namespace ViewModel
         public string TypeVhicles { get; set; }
         public int AmountPlaces { get; set; }
         public int PriceForKM { get; set; }
+        public string DriverAddress { get; set; }
     }
 }
 

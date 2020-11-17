@@ -18,44 +18,39 @@ namespace BL.OrTools
     public class VrpCapacity
     {
 
-       
-        //private readonly PassengerInStationService passInStatSer;
-        public DistanceMatrixResponse distanceMatrix(List<string> destinations, string origin)
+
+        private readonly TransportationService transportationService;
+        public long[,] distanceMatrix(List<string> address)
         {
             DistanceMatrixRequest request = new DistanceMatrixRequest();
-            var address = new List<Location>() { new Location(origin) };
-
-            address.AddRange(destinations.Select(t => new Location(t)));
-            request.Destinations = address;
-            request.Origins = address;
+            
+            request.Destinations = address.Select(t => new Location(t));
+            request.Origins = address.Select(t => new Location(t));
 
             request.TravelMode = TravelMode.Driving;
-            request.Key = "AIzaSyAXS8o9R2xBXjDX";
+            request.Key = "AIzaSyAXS8o9R2xBXjDX-_7SGv3xqE8ET_413wg";
             var res = GoogleMaps.DistanceMatrix.Query(request);
 
-            if (res.Status == Status.Ok)
-            {
-                res.
-                //long[,] mat = new long[destinations.Count(), destinations.Count()];
-                //mat
-                long[,] matrix = new long[destinations.Count(), destinations.Count()];
-                for (int i = 0; i < res.Rows.ToArray().Length; i++)
+            //if (res.Status == Status.Ok)
+            //{
+                long[,] distanceMatrix=new long[address.Count(), address.Count()];
+                for (int j=0; j < res.Rows.Count(); j++)
                 {
-                   DistanceMatrixE lements.[] elements = res.Rows.ToArray()[i].Elements;
-                    for (int j = 0; j < elements.Length; j++)
+                    Row row = res.Rows.ElementAt(j);
+                    for (int i = 0; i < row.Elements.Count(); i++)
                     {
-                        matrix[i][j] = elements[j].distance.inMeters;
+                        distanceMatrix[j,i] = Convert.ToInt64(row.Elements.ElementAt(i).Distance.Value);
                     }
                 }
-                return matrix;
-            }
-            //throw Exception
-            return res;
+                return distanceMatrix;
+            //}
+            //throw Exception;
+            //return res;
 
         }
         void callback(DistanceMatrixResponse response, string status)
         {
-            if (response.Status == GoogleApi.Entities.Common.Enums.Status.Ok)
+            if (response.Status == Status.Ok)
             {
                 var origins = response.OriginAddresses.ToList();
                 var destinations = response.DestinationAddresses.ToList();
@@ -75,26 +70,28 @@ namespace BL.OrTools
             }
         }
 
-        private readonly VehiclesService vehiclesService;
-       public VrpCapacity(VehiclesService vehiclesService)
+        private readonly VehiclesService VehiclesService;
+        public VrpCapacity(VehiclesService vehiclesService)
         {
-            this.vehiclesService = vehiclesService;
+            VehiclesService = vehiclesService;
+
         }
         /// <summary>
         ///   Print the solution.
         /// </summary>
-        public void PrintSolution(
+        public string PrintSolution(
            in DataModel data,
            in RoutingModel routing,
            in RoutingIndexManager manager,
-           in Assignment solution)
+           in Assignment solution, string[] address)
         {
+            string res = string.Empty;
             // Inspect solution.
             long totalDistance = 0;
             long totalLoad = 0;
             for (int i = 0; i < data.VehicleNumber; ++i)
             {
-                Console.WriteLine("Route for Vehicle {0}:", i);
+                res+=string.Format("/nRoute for Vehicle {0}: seats:{1}", i, data.VehicleCapacities[i]);
                 long routeDistance = 0;
                 long routeLoad = 0;
                 var index = routing.Start(i);
@@ -102,29 +99,30 @@ namespace BL.OrTools
                 {
                     long nodeIndex = manager.IndexToNode(index);
                     routeLoad += data.Demands[nodeIndex];
-                    Console.Write("{0} Load({1}) -> ", nodeIndex, routeLoad);
+                    res+=string.Format("/nAddress: {0}; {1} Load({2}) ->  ",address[nodeIndex], nodeIndex, routeLoad);
                     var previousIndex = index;
                     index = solution.Value(routing.NextVar(index));
                     routeDistance += routing.GetArcCostForVehicle(previousIndex, index, 0);
                 }
-                Console.WriteLine("{0}", manager.IndexToNode((int)index));
-                Console.WriteLine("Distance of the route: {0}m", routeDistance);
+                res+=string.Format("/n{0}", manager.IndexToNode((int)index));
+                res+=string.Format("/nDistance of the route: {0}m", routeDistance);
                 totalDistance += routeDistance;
                 totalLoad += routeLoad;
             }
-            Console.WriteLine("Total distance of all routes: {0}m", totalDistance);
-            Console.WriteLine("Total load of all routes: {0}m", totalLoad);
+            res+=string.Format("/nTotal distance of all routes: {0}m", totalDistance);
+            res+=string.Format("/nTotal load of all routes: {0}m", totalLoad);
+            return res;
         }
-
-        public void CalcRoute()
+        public string CalcRoute(DataModel data, string[] address)
         {
             // Instantiate the data problem.
-            DataModel data = new DataModel();
+            
             // Create Routing Index Manager
             RoutingIndexManager manager = new RoutingIndexManager(
                 data.DistanceMatrix.GetLength(0),
                data.VehicleNumber,//50,// vehiclesService.GetAllVehiclesList().Count,
-                data.Depot);
+                new int[] { 0, 0, 0 },
+                new int[] { 1, 2, 3});
 
             // Create Routing Model.
             RoutingModel routing = new RoutingModel(manager);
@@ -133,8 +131,8 @@ namespace BL.OrTools
             int transitCallbackIndex = routing.RegisterTransitCallback(
               (long fromIndex, long toIndex) =>
               {
-              // Convert from routing variable Index to distance matrix NodeIndex.
-              var fromNode = manager.IndexToNode(fromIndex);
+                  // Convert from routing variable Index to distance matrix NodeIndex.
+                  var fromNode = manager.IndexToNode(fromIndex);
                   var toNode = manager.IndexToNode(toIndex);
                   return data.DistanceMatrix[fromNode, toNode];
               }
@@ -147,15 +145,15 @@ namespace BL.OrTools
             int demandCallbackIndex = routing.RegisterUnaryTransitCallback(
               (long fromIndex) =>
               {
-              // Convert from routing variable Index to demand NodeIndex.
-              var fromNode = manager.IndexToNode(fromIndex);
+                  // Convert from routing variable Index to demand NodeIndex.
+                  var fromNode = manager.IndexToNode(fromIndex);
                   return data.Demands[fromNode];
               }
             );
             routing.AddDimensionWithVehicleCapacity(
               demandCallbackIndex, 0,  // null capacity slack
               data.VehicleCapacities,   // vehicle maximum capacities
-              true,                      // start cumul to zero
+              false,                      // start cumul to zero
               "Capacity");
 
             // Setting first solution heuristic.
@@ -168,7 +166,7 @@ namespace BL.OrTools
             Assignment solution = routing.SolveWithParameters(searchParameters);
 
             // Print solution on console.
-            PrintSolution(data, routing, manager, solution);
+            return PrintSolution(data, routing, manager, solution, address);
         }
     }
 }

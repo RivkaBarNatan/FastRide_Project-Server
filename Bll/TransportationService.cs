@@ -7,6 +7,7 @@ using ViewModel;
 using DAL;
 using MongoDB.Driver;
 using AutoMapper;
+using BL.OrTools;
 
 namespace BL
 {
@@ -14,16 +15,19 @@ namespace BL
     {
         private readonly IMongoCollection<Transportation> transportations;
         private readonly IMongoCollection<User> user;
-        private readonly UserService userService;
+        private readonly VehiclesService vehicleSer;
         private readonly IMapper mapper;
+        private readonly VrpCapacity vrpCapacity;
 
-        public TransportationService(IDatabaseSettings settings, IMapper map)
+        public TransportationService(IDatabaseSettings settings, IMapper map, VehiclesService vehicleSer, VrpCapacity vrpCapacity)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             transportations = database.GetCollection<Transportation>(this.GetType().Name + "s");
-
+            user = database.GetCollection<User>("UserService");
             mapper = map;
+            this.vehicleSer = vehicleSer;
+            this.vrpCapacity = vrpCapacity;
         }
 
         public List<TransportationDTO> GetAllTransportationsList()
@@ -67,12 +71,37 @@ namespace BL
         }
         public List<AddressesAndCountPassengers> GetCountPassengerInStation(string transportationId)
         {
-            var group = transportations.AsQueryable().Where(t=> t.TransportationId == transportationId)
-                        .SelectMany(t=> t.Users)
-                        .Join(user.AsQueryable(), t=> t, user => user.UserId, (usersIds, users)=> users)
-                        .GroupBy(u=> u.Address)
-                        .Select((t)=> new AddressesAndCountPassengers { Address = t.Key,  Count = t.Count()});
-            return group.ToList();
+            var group = transportations.AsQueryable().Where(t => t.TransportationId == transportationId).ToList();
+
+            var a = group.SelectMany(t => t.Users)
+            .Join(user.AsQueryable(), t => t, user => user.UserId,(usersIds, users) => users);
+
+            var b = a.GroupBy(u=> u.Address)
+            .Select((t)=> new AddressesAndCountPassengers { Address = t.Key,  Count = t.Count()});
+            return b.ToList();
+        }
+
+        public string CalcRoute(string transportationId)
+        {
+            DataModel data = new DataModel();
+            var destinations = GetCountPassengerInStation(transportationId).Select(d => d.Address).ToList();
+            var origion = GetTransportationsById(transportationId).Address;
+
+            var address = new List<string>{origion };
+
+            //address.AddRange(vehicleSer.GetAllVehiclesList().Select(v => v.DriverAddress).ToList());
+
+            address.AddRange(destinations);
+
+            data.DistanceMatrix = vrpCapacity.distanceMatrix(address);
+            var demands = new List<long> { 0 , 0, 0};
+            demands.AddRange(GetCountPassengerInStation(transportationId).Select(c => (long)c.Count));
+            data.Demands = demands.ToArray();
+               data.VehicleCapacities = vehicleSer.GetAllVehiclesCapacity();
+               //data.Depot = 1;
+            data.VehicleNumber = data.VehicleCapacities.Length;
+            
+            return vrpCapacity.CalcRoute(data, address.ToArray());
         }
     }
 }

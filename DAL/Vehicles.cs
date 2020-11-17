@@ -25,5 +25,6 @@ namespace DAL
         public string TypeVhicles { get; set; }
         public Nullable<int> AmountPlaces { get; set; }
         public Nullable<int> PriceForKM { get; set; }
+        public string DriverAddress { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace ViewModel
     {
         [BsonId]
         public string TransportationId { get; set; }
+        public string Description { get; set; }
         public List<string> Travels { get; set; }
         public List<string> Users { get; set; }
         public string Address { get; set; }

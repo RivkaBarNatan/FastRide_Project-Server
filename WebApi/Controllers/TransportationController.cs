@@ -54,10 +54,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult CalcRoute()
+        public IActionResult CalcRoute(string transportationId)
         {
-            vrpCapcity.CalcRoute();
-            return Ok( );
+            return Ok(transportationService.CalcRoute(transportationId));
         }
     }
 }

@@ -46,6 +46,7 @@ namespace WebApi
             services.AddSingleton<UserService>();
             services.AddSingleton<FrequencyService>();
             services.AddSingleton<StationService>();
+            //services.AddSingleton<DataModel>();
 
             var mapper = AutoMapperConfiguration.AutoMapperConfiguration.RegisterMappings();
             services.AddSingleton(mapper);
