@@ -73,9 +73,8 @@ namespace BL
         {
             var group = transportations.AsQueryable().Where(t => t.TransportationId == transportationId).ToList();
 
-            var a = group.SelectMany(t => t.Users)
-            .Join(user.AsQueryable(), t => t, user => user.UserId,(usersIds, users) => users);
-
+            var a = group.SelectMany(t => t.UsersAndAddress);
+            
             var b = a.GroupBy(u=> u.Address)
             .Select((t)=> new AddressesAndCountPassengers { Address = t.Key,  Count = t.Count()});
             return b.ToList();

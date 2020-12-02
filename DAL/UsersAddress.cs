@@ -7,6 +7,6 @@ namespace DAL
     public class UsersAddress
     {
         public string User;
-        public List<string> Address;
+        public string Address;
     }
 }

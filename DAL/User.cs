@@ -21,6 +21,7 @@ namespace DAL
         public List<string> Address { get; set; }
         public string Email { get; set; }
         public userType Type { get; set; }
+        public List<string> TransportationCreated { get; set; }
         public string OrganizatioId { get; set; }
         
     }

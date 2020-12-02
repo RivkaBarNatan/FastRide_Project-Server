@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
+using WebApi.Email;
 
 namespace WebApi
 {
@@ -35,6 +36,10 @@ namespace WebApi
 
             services.AddSingleton<IDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+
+            var emailConfig = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<EmailSender>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddSingleton<VrpCapacity>();
