@@ -27,9 +27,9 @@ namespace BL
             return mapper.Map<List<UserDTO>>(family.Find(_ => true).ToList());
         }
 
-        public UserDTO GetUserByUserName(string name)
+        public UserDTO GetUserByUserId(string id)
         {
-            return mapper.Map<UserDTO>(family.Find(f => f.UserName == name).ToList().FirstOrDefault()); ;
+            return mapper.Map<UserDTO>(family.Find(f => f.UserId == id).ToList().FirstOrDefault()); ;
         }
 
         public  void AddUserToList(UserDTO family)

@@ -25,9 +25,9 @@ namespace WebApi.Controllers
 
         [HttpGet("[action]")]
         // GET: api/User/5
-        public IActionResult GetUserByUserName(string userName)
+        public IActionResult GetUserByUserId(string userId)
         {
-            return Ok(UserService.GetUserByUserName(userName));
+            return Ok(UserService.GetUserByUserId(userId));
         }
 
         [HttpGet]

@@ -32,6 +32,7 @@ namespace BL
 
         public List<TransportationDTO> GetAllTransportationsList()
         {
+            
             return mapper.Map<List<TransportationDTO>>(transportations.Find(_ => true).ToList());
         }
 
@@ -42,6 +43,9 @@ namespace BL
 
         public void AddTransportationsToList(TransportationDTO transportation)
         {
+            //var ua = mapper.Map<List<UsersAddressDTO>>(transportation.UsersAndAddress);
+            var ua = transportation.UsersAndAddress;
+            transportation.UsersAndAddress = ua;
             transportations.InsertOne(mapper.Map<Transportation>(transportation));
         }
 

@@ -15,7 +15,7 @@ namespace DAL
         public string Description { get; set; }
         public List<string> Travels { get; set; }
         public List<UsersAddress> UsersAndAddress { get; set; }
-        public List<string> WaitingList { get; set; }
+        public List<UsersAddress> WaitingList { get; set; }
         public string Address { get; set; }
         public Schedules Schedules { get; set; }
     }

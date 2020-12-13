@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DAL
+namespace ViewModel
 {
-    public class UsersAddress
+    public class UsersAddressDTO
     {
-        public string User{ get; set; }
+        public string User { get; set; }
         public string Address { get; set; }
     }
 }

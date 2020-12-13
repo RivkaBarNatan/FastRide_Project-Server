@@ -40,6 +40,8 @@ namespace WebApi.AutoMapperConfiguration
             CreateMap<TrackDTO, Track>();
             CreateMap<Vehicles, VehiclesDTO>();
             CreateMap<VehiclesDTO, Vehicles>();
+            CreateMap<UsersAddress, UsersAddressDTO>();
+            CreateMap<UsersAddressDTO, UsersAddress>();
         }
     }
 }
