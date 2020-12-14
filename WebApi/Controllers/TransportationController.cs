@@ -16,7 +16,7 @@ namespace WebApi.Controllers
         private readonly TransportationService transportationService;
         private readonly VrpCapacity vrpCapcity;
         public TransportationController(TransportationService transportationService, VrpCapacity vrpCapcity)
-        {  
+        {
             this.transportationService = transportationService;
             this.vrpCapcity = vrpCapcity;
         }
@@ -33,14 +33,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("[action]")]        // POST: api/Transportation
-        public IActionResult AddTransportation([FromBody]TransportationDTO transportation)
+        public IActionResult AddTransportation([FromBody] TransportationDTO transportation)
         {
             transportationService.AddTransportationsToList(transportation);
             return Ok(transportationService.GetAllTransportationsList());
         }
 
         [HttpPut("[action]")]        // PUT: api/Transportation/5
-        public IActionResult PutTransportation([FromBody]TransportationDTO transportation)
+        public IActionResult PutTransportation([FromBody] TransportationDTO transportation)
         {
             transportationService.PutTransportations(transportation);
             return Ok(transportationService.GetAllTransportationsList());
