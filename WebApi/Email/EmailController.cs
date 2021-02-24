@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using DAL;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
+using Microsoft.Extensions.Hosting;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,14 +40,21 @@ namespace WebApi.Email
         {
             try
             {
-                var fromAddress = new MailAddress("rivkibarnatan@gmail.com", "Rivki Bar־Natan");
+                var fromAddress = new MailAddress("optimal.fastride@gmail.com", "Fast Ride");
                 var toAddress = new MailAddressCollection();
                 foreach (var item in email)
                 {
                     toAddress.Add(item);
                 }
-                const string fromPassword = "barntan5606";
+                const string fromPassword = "tupyhnkh";
                 string subject = subjectMail;
+
+                //string body = string.Empty;
+                //using (StreamReader reader = new StreamReader(IHostingEnvironment.WebRootPath, "~/createTransportation.html"))
+                //{
+                //    body = reader.ReadToEnd();
+                //}
+
                 string body = bodyMail;
 
                 var smtp = new SmtpClient

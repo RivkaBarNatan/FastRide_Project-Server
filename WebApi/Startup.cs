@@ -50,7 +50,8 @@ namespace WebApi
             services.AddSingleton<OrganizationService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<FrequencyService>();
-            services.AddSingleton<StationService>();
+            services.AddSingleton<SchedulesService>();
+            services.AddSingleton <RoutesService>();
             //services.AddSingleton<DataModel>();
 
             var mapper = AutoMapperConfiguration.AutoMapperConfiguration.RegisterMappings();

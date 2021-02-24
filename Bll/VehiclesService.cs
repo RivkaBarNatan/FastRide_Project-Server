@@ -25,12 +25,17 @@ namespace BL
         }
         public  List<VehiclesDTO> GetAllVehiclesList()
         {
-                return mapper.Map<List<VehiclesDTO>>(vehicles.Find(_ => true).ToList());
+            return mapper.Map<List<VehiclesDTO>>(vehicles.Find(_ => true).ToList());
         }
 
         public  VehiclesDTO GetVehiclesByType(string type)
         {
-            return mapper.Map<VehiclesDTO>(vehicles.Find(v => v.TypeVhicles == type).ToList().FirstOrDefault());
+            return mapper.Map<VehiclesDTO>(vehicles.Find(v => v.TypeVhicles == type).ToList());
+        }
+
+        public Vehicles GetVehicleByAddressAndCapacity(string address, long capacity)
+        {
+            return vehicles.Find(x => x.AmountPlaces == capacity && x.DriverAddress == address).First();
         }
 
         public  void AddVehiclesToList(VehiclesDTO vehicles)
@@ -41,6 +46,10 @@ namespace BL
         public  void PutVehicles(VehiclesDTO vehicle)
         {
             vehicles.ReplaceOne(V => V.VehiclesId == vehicle.VehiclesId, mapper.Map<Vehicles>(vehicle));
+        }
+        public void PutVehicles(Vehicles vehicle)
+        {
+            vehicles.ReplaceOne(V => V.VehiclesId == vehicle.VehiclesId, vehicle);
         }
 
         public  void DeleteVehicles(string id)

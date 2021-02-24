@@ -8,6 +8,7 @@ using DAL;
 using MongoDB.Driver;
 using AutoMapper;
 using BL.OrTools;
+using GoogleApi.Entities.Common;
 
 namespace BL
 {
@@ -84,26 +85,125 @@ namespace BL
             return b.ToList();
         }
 
-        public string CalcRoute(string transportationId)
+        public VrpCapacity.ToReturn CalcRoute(string transportationId)
         {
             DataModel data = new DataModel();
             var destinations = GetCountPassengerInStation(transportationId).Select(d => d.Address).ToList();
             var origion = GetTransportationsById(transportationId).Address;
-
+            
+            
             var address = new List<string>{origion };
 
-            //address.AddRange(vehicleSer.GetAllVehiclesList().Select(v => v.DriverAddress).ToList());
+            address.AddRange(vehicleSer.GetAllVehiclesList().Select(v => v.DriverAddress).ToList());
 
             address.AddRange(destinations);
 
+            
             data.DistanceMatrix = vrpCapacity.distanceMatrix(address);
-            var demands = new List<long> { 0 , 0, 0};
+
+            data.VehicleCapacities = vehicleSer.GetAllVehiclesCapacity();
+
+            //data.Depot = 1;
+            data.VehicleNumber = data.VehicleCapacities.Length;
+
+
+            var demands = new List<long> { 0 };
+            for (int i = 0; i < data.VehicleNumber; i++)
+            {
+                demands.Add(0);
+            }
             demands.AddRange(GetCountPassengerInStation(transportationId).Select(c => (long)c.Count));
             data.Demands = demands.ToArray();
-               data.VehicleCapacities = vehicleSer.GetAllVehiclesCapacity();
-               //data.Depot = 1;
-            data.VehicleNumber = data.VehicleCapacities.Length;
             
+
+
+            //פיזור
+            if (GetTransportationsById(transportationId).Schedules.Routes.IsDispersion == true)
+            {
+                data.start = new int[data.VehicleNumber];
+                data.start.AsSpan().Fill(0);
+                data.end = new int[data.VehicleNumber];
+                for (int i = 0; i < data.VehicleNumber; i++)
+                {
+                    data.end[i] = i+1;
+                }
+            }
+            else
+            {
+                data.end = new int[data.VehicleNumber];
+                data.end.AsSpan().Fill(0);
+                data.start = new int[data.VehicleNumber];
+                for (int i = 0; i < data.VehicleNumber; i++)
+                {
+                    data.start[i] = i + 1;
+                }
+            }
+
+            return vrpCapacity.CalcRoute(data, address.ToArray());
+        }
+
+        public VrpCapacity.ToReturn StationUnion(List<string> route, long[]distances, string transportationId)
+        {
+            //Remove a station that the distance from the previous station less than 50 meters.
+            for (int i = 0, j = 0; i < route.Count() && j < distances.Count(); i++, j++)
+            {
+                if(distances[i] < 50)
+                {
+                    route.Remove(route[i+1]);
+                    j++;
+                }
+            }
+            DataModel data = new DataModel();
+            var destinations = route;
+            var origion = GetTransportationsById(transportationId).Address;
+
+
+            var address = new List<string> { origion };
+
+            address.AddRange(vehicleSer.GetAllVehiclesList().Select(v => v.DriverAddress).ToList());
+
+            address.AddRange(destinations);
+
+
+            data.DistanceMatrix = vrpCapacity.distanceMatrix(address);
+
+            data.VehicleCapacities = vehicleSer.GetAllVehiclesCapacity();
+
+            data.VehicleNumber = data.VehicleCapacities.Length;
+
+
+            var demands = new List<long> { 0 };
+            for (int i = 0; i < data.VehicleNumber; i++)
+            {
+                demands.Add(0);
+            }
+            demands.AddRange(GetCountPassengerInStation(transportationId).Select(c => (long)c.Count));
+            data.Demands = demands.ToArray();
+
+
+
+            //פיזור
+            if (GetTransportationsById(transportationId).Schedules.Routes.IsDispersion == true)
+            {
+                data.start = new int[data.VehicleNumber];
+                data.start.AsSpan().Fill(0);
+                data.end = new int[data.VehicleNumber];
+                for (int i = 0; i < data.VehicleNumber; i++)
+                {
+                    data.end[i] = i + 1;
+                }
+            }
+            else
+            {
+                data.end = new int[data.VehicleNumber];
+                data.end.AsSpan().Fill(0);
+                data.start = new int[data.VehicleNumber];
+                for (int i = 0; i < data.VehicleNumber; i++)
+                {
+                    data.start[i] = i + 1;
+                }
+            }
+
             return vrpCapacity.CalcRoute(data, address.ToArray());
         }
     }

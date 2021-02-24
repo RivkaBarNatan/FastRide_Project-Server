@@ -15,6 +15,7 @@ namespace BL
         private readonly IMapper mapper;
         public RoutesService(IDatabaseSettings settings, IMapper map)
         {
+
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             routes = database.GetCollection<Routes>(this.GetType().Name);
