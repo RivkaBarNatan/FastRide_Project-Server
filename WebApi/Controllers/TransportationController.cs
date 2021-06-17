@@ -61,7 +61,7 @@ namespace WebApi.Controllers
 
         [HttpGet("[action]")]
         //For get a route with station union
-        public IActionResult StationUnion(string transportationId, List<string> route, long[] distances)
+        public IActionResult StationUnion(string transportationId, [FromQuery]  List<string> route,  long[] distances)
         {
             return Ok(transportationService.StationUnion(route, distances, transportationId));
         }

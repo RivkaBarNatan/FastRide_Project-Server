@@ -23,7 +23,11 @@ namespace DAL
         public userType Type { get; set; }
         public List<string> TransportationCreated { get; set; }
         public string OrganizatioId { get; set; }
-        
+
+        public static object Find(Func<object, bool> p)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

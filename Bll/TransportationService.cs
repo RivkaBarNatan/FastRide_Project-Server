@@ -145,12 +145,17 @@ namespace BL
         public VrpCapacity.ToReturn StationUnion(List<string> route, long[]distances, string transportationId)
         {
             //Remove a station that the distance from the previous station less than 50 meters.
-            for (int i = 0, j = 0; i < route.Count() && j < distances.Count(); i++, j++)
+            var distanceDurations = vrpCapacity.distanceMatrix(route);
+            for (int i = 0; i < distanceDurations.Length; i++)
             {
-                if(distances[i] < 50)
+                if (i > route.Count()-1)
+                    break;
+                for (int j = 0; j < distanceDurations.Length; j++)
                 {
-                    route.Remove(route[i+1]);
-                    j++;
+                    if (j > route.Count()-1)
+                        break;
+                    if (i < j && distanceDurations[i, j].duration < 120)
+                        route.Remove(route[i]);
                 }
             }
             DataModel data = new DataModel();

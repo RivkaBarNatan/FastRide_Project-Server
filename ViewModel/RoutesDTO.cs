@@ -13,11 +13,8 @@ namespace ViewModel
         [BsonId]
         public string RouteId { get; set; }
         public string TravelMode { get; set; }
-        public string Vehicle { get; set; }
         public bool IsDispersion { get; set; }
         public int CountUsers { get; set; }
-        public string Duration { get; set; }
-        public int TODOLen { get; set; }
-        public List<Station> Stations { get; set; }
+        public List<RouteForVehicle> RouteForVehicle { get; set; }
     }
 }

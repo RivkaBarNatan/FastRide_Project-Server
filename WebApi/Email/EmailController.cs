@@ -40,13 +40,13 @@ namespace WebApi.Email
         {
             try
             {
-                var fromAddress = new MailAddress("optimal.fastride@gmail.com", "Fast Ride");
+                    var fromAddress = new MailAddress("optimal.fastride@gmail.com", "Fast Ride");
                 var toAddress = new MailAddressCollection();
                 foreach (var item in email)
                 {
                     toAddress.Add(item);
                 }
-                const string fromPassword = "tupyhnkh";
+                const string fromPassword = "optimalitupyhnh";
                 string subject = subjectMail;
 
                 //string body = string.Empty;
@@ -55,7 +55,8 @@ namespace WebApi.Email
                 //    body = reader.ReadToEnd();
                 //}
 
-                string body = bodyMail;
+                string body = @bodyMail;
+                //string body = bodyMail;
 
                 var smtp = new SmtpClient
                 {
@@ -71,6 +72,7 @@ namespace WebApi.Email
                     From = fromAddress,
                     Subject = subject,
                     Body = body,
+                    IsBodyHtml = true
                 })
                 {
                     message.To.Add(toAddress.ToString());
@@ -80,7 +82,7 @@ namespace WebApi.Email
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return NotFound( ex.Message);
             }
         }
 

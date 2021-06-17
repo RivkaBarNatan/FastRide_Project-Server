@@ -95,6 +95,7 @@ namespace BL.OrTools
             public List<List<StationInfo>> way { get; set; }
             public List<long> time { get; set; }
             public List<long> price { get; set; }
+            public List<string> vehicleId { get; set; }
         }
         /// <summary>
         ///   Print the solution.
@@ -111,6 +112,7 @@ namespace BL.OrTools
             ToReturn ret=new ToReturn();
             ret.time= new List<long>();
             ret.price = new List<long>();
+            ret.vehicleId = new List<string>();
             string driverAdderss="";
 
             string res = string.Empty;
@@ -169,7 +171,7 @@ namespace BL.OrTools
                     }
                     var previousIndex = index;
                     index = solution.Value(routing.NextVar(index));
-                    routeDistance.distance += data.DistanceMatrix[nodeIndex, index].distance;
+                    routeDistance.distance += data.DistanceMatrix[nodeIndex, previousIndex].distance;
 
                     //routeDistance.distance += routing.GetArcCostForVehicle(previousIndex, index, 0);
                     routeDistance.duration += routing.GetArcCostForVehicle(previousIndex, index, 0);
@@ -183,7 +185,8 @@ namespace BL.OrTools
                     ret.time.Add(routeDistance.duration / 60);
                     // calculate the price of the route
                     ret.price.Add((long)(VehiclesService.GetVehicleByAddressAndCapacity(address[i+1], data.VehicleCapacities[i]).PriceForKM * routeDistance.distance/1000));
-                    var updateVehicle=VehiclesService.GetVehicleByAddressAndCapacity(address[i + 1], data.VehicleCapacities[i]);
+                    ret.vehicleId.Add(VehiclesService.GetVehicleByAddressAndCapacity(address[i + 1], data.VehicleCapacities[i]).VehiclesId);
+                    var updateVehicle = VehiclesService.GetVehicleByAddressAndCapacity(address[i + 1], data.VehicleCapacities[i]);
                     updateVehicle.DriverAddress = driverAdderss;
                     //VehiclesService.PutVehicles(updateVehicle);
                 }
@@ -223,8 +226,17 @@ namespace BL.OrTools
             );
 
             // Define cost of each arc.
-            routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+            try
+            { 
+                if (data.VehicleNumber == 0)
+                    return null;
+                routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             // Add Capacity constraint.
             int demandCallbackIndex = routing.RegisterUnaryTransitCallback(
               (long fromIndex) =>

@@ -52,6 +52,7 @@ namespace WebApi
             services.AddSingleton<FrequencyService>();
             services.AddSingleton<SchedulesService>();
             services.AddSingleton <RoutesService>();
+            services.AddSingleton<RouteForVehicle>();
             //services.AddSingleton<DataModel>();
 
             var mapper = AutoMapperConfiguration.AutoMapperConfiguration.RegisterMappings();
