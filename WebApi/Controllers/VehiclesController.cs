@@ -24,6 +24,12 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("[action]")]
+        public IActionResult GetVehicleById(string id)
+        {
+            return Ok(vehiclesService.GetVehicleById(id));
+        }
+
+        [HttpGet("[action]")]
         // GET: api/Vehicles/5
         public IActionResult GetVehiclesByType(string type)
         {

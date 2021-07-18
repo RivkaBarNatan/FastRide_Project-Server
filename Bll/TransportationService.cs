@@ -103,7 +103,6 @@ namespace BL
 
             data.VehicleCapacities = vehicleSer.GetAllVehiclesCapacity();
 
-            //data.Depot = 1;
             data.VehicleNumber = data.VehicleCapacities.Length;
 
 

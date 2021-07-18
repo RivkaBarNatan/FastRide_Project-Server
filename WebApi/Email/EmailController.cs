@@ -40,7 +40,7 @@ namespace WebApi.Email
         {
             try
             {
-                    var fromAddress = new MailAddress("optimal.fastride@gmail.com", "Fast Ride");
+                var fromAddress = new MailAddress("optimal.fastride@gmail.com", "Fast Ride");
                 var toAddress = new MailAddressCollection();
                 foreach (var item in email)
                 {

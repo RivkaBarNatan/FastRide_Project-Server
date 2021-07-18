@@ -28,6 +28,10 @@ namespace BL
             return mapper.Map<List<VehiclesDTO>>(vehicles.Find(_ => true).ToList());
         }
 
+        public VehiclesDTO GetVehicleById(string id)
+        {
+            return mapper.Map<VehiclesDTO>(vehicles.Find(v => v.VehiclesId == id).ToList().FirstOrDefault());
+        }
         public  VehiclesDTO GetVehiclesByType(string type)
         {
             return mapper.Map<VehiclesDTO>(vehicles.Find(v => v.TypeVhicles == type).ToList());

@@ -32,12 +32,9 @@ namespace BL.OrTools
             request.Origins = address.Select(t => new Location(t));
 
             request.TravelMode = TravelMode.Driving;
-            //request.DepartureTime.Value
             request.Key = "AIzaSyAXS8o9R2xBXjDX-_7SGv3xqE8ET_413wg";
             var res = GoogleMaps.DistanceMatrix.Query(request);
 
-            //if (res.Status == Status.Ok)
-            //{
             DistanceDuration[,] distanceMatrix = new DistanceDuration[address.Count(), address.Count()];
             for (int j=0; j < res.Rows.Count(); j++)
             {
@@ -52,27 +49,7 @@ namespace BL.OrTools
             return distanceMatrix;
 
         }
-        void callback(DistanceMatrixResponse response, string status)
-        {
-            if (response.Status == Status.Ok)
-            {
-                var origins = response.OriginAddresses.ToList();
-                var destinations = response.DestinationAddresses.ToList();
-                var rows = response.Rows.ToList();
-                for (var i = 0; i < origins.Count(); i++)
-                {
-                    var results = rows[i].Elements.ToList();
-                    for (var j = 0; j < results.Count(); j++)
-                    {
-                        var element = results[j];
-                        var distance = element.Distance.Text;
-                        var duration = element.Duration.Text;
-                        var from = origins[i];
-                        var to = destinations[j];
-                    }
-                }
-            }
-        }
+        
 
         private readonly VehiclesService VehiclesService;
         public VrpCapacity(VehiclesService vehiclesService)
@@ -93,7 +70,7 @@ namespace BL.OrTools
         public class ToReturn
         {
             public List<List<StationInfo>> way { get; set; }
-            public List<long> time { get; set; }
+            public List<DistanceDuration> timeDis { get; set; }
             public List<long> price { get; set; }
             public List<string> vehicleId { get; set; }
         }
@@ -110,7 +87,7 @@ namespace BL.OrTools
             List<List<StationInfo>> waypoint=new List<List<StationInfo>>(data.VehicleNumber) { null };
             waypoint[0] = new List<StationInfo>() { null };
             ToReturn ret=new ToReturn();
-            ret.time= new List<long>();
+            ret.timeDis= new List<DistanceDuration>();
             ret.price = new List<long>();
             ret.vehicleId = new List<string>();
             string driverAdderss="";
@@ -182,7 +159,11 @@ namespace BL.OrTools
                 res+=string.Format("/nDistance of the route: {0}m, Time of the route: {1}", routeDistance.distance, routeDistance.duration/60);
                 if(routeDistance.duration!=0)
                 {
-                    ret.time.Add(routeDistance.duration / 60);
+                    ret.timeDis.Add(new DistanceDuration()
+                    {
+                        duration = routeDistance.duration / 60,
+                        distance = routeDistance.distance
+                    });
                     // calculate the price of the route
                     ret.price.Add((long)(VehiclesService.GetVehicleByAddressAndCapacity(address[i+1], data.VehicleCapacities[i]).PriceForKM * routeDistance.distance/1000));
                     ret.vehicleId.Add(VehiclesService.GetVehicleByAddressAndCapacity(address[i + 1], data.VehicleCapacities[i]).VehiclesId);
