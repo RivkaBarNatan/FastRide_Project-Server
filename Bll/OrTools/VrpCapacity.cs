@@ -32,7 +32,7 @@ namespace BL.OrTools
             request.Origins = address.Select(t => new Location(t));
 
             request.TravelMode = TravelMode.Driving;
-            request.Key = "AIzaSyAXS8o9R2xBXjDX-_7SGv3xqE8ET_413wg";
+            request.Key = "Your API Key";
             var res = GoogleMaps.DistanceMatrix.Query(request);
 
             DistanceDuration[,] distanceMatrix = new DistanceDuration[address.Count(), address.Count()];
