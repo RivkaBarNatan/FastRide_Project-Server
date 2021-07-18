@@ -46,7 +46,7 @@ namespace WebApi.Email
                 {
                     toAddress.Add(item);
                 }
-                const string fromPassword = "optimalitupyhnh";
+                const string fromPassword = null;
                 string subject = subjectMail;
 
                 //string body = string.Empty;
